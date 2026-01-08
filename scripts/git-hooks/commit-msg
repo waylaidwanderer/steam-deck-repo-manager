@@ -1,0 +1,39 @@
+#!/bin/bash
+# git hook to check the commit message for Conventional Commits formatting
+
+# Regex for Conventional Commits
+# We check two patterns: one with scope, one without
+
+types="feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert"
+pattern_no_scope="^($types): .+$"
+pattern_scope="^($types)\([a-z0-9\._/, -]+\): .+$"
+
+while read -r line; do
+    # Skip comments
+    if [[ "$line" =~ ^# ]]; then
+        continue
+    fi
+    
+    # Check if message is empty
+    if [ -z "$line" ]; then
+        continue
+    fi
+    
+    # Check against both patterns
+    if [[ ! "$line" =~ $pattern_no_scope ]] && [[ ! "$line" =~ $pattern_scope ]]; then
+        echo "❌ Error: Commit message does not follow Conventional Commits format."
+        echo ""
+        echo "Format:   <type>(<scope>): <subject>"
+        echo "Example:  feat(gui): add new button"
+        echo "Example:  fix(api/auth): handle timeout"
+        echo ""
+        echo "Rules:"
+        echo "1. Type must be one of: ${types//|/, }"
+        echo "2. Scope is optional but must use: lowercase letters, numbers, and separators ( . _ - / , )"
+        echo "3. Subject must not be empty"
+        exit 1
+    fi
+    
+    # Only check the first line
+    break
+done < "$1"
