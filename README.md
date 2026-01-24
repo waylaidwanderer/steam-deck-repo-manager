@@ -27,7 +27,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/YourUsername/steam-deck-repo-manager.git
+git clone https://github.com/waylaidwanderer/steam-deck-repo-manager
 cd steam-deck-repo-manager
 ```
 
